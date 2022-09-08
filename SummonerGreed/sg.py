@@ -106,7 +106,7 @@ def esc():
     print("esc")
     click((5, 100))
     keyboard.press_and_release('esc')
-    if(findImage(images["exit"], areas["exitArea"])):
+    if(findImage(images["exit"], areas["exitArea"], tries=5)):
         keyboard.press_and_release('esc')
 
 
@@ -204,11 +204,8 @@ def loop():
 
 
 def main():
-    # print("main")
-    # start()
-    # loop()
-    setFormation(formations["main"])
-    # scrollDown()
+    start()
+    loop()
 
 
 main()
