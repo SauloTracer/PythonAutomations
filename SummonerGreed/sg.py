@@ -96,24 +96,28 @@ def clearFormation():
 
 
 def scrollDown():
+    win32api.SetCursorPos((1180,930))
+    pg.dragTo(1180, 500, 1, button='left')
+    time.sleep(7) # wait for scroll to finish
+    print("scrollDown finished")
+
+    # """Click and drag x0 y0 to x1 y1"""
+    # x = 1180
+    # y0, y1 = (930, 630)
+    # steps = 20
+    # speed = 0.1
+    # step = floor((y0 - y1) / steps)
+    # win32api.SetCursorPos((x,y0))
+    # time.sleep(0.03) #This pauses the script for 0.03 seconds to avoid missing the click
+    # win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y0,0,0)
+    # for s in range(steps):
+    #     win32api.SetCursorPos((x, y0 - step * s))
+    #     time.sleep(speed)
+    # win32api.SetCursorPos((x,y1))
+    # win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y1,0,0)
+    # time.sleep(8) # wait for scroll to finish
     # try pg.moveTo(x, y, TEMPO)
-    # pg.dragTo(100, 100, 0.1, button='left')
-    # pg.scroll(amount)
-    """Click and drag x0 y0 to x1 y1"""
-    x = 1180
-    y0, y1 = (930, 630)
-    steps = 20
-    speed = 0.1
-    step = floor((y0 - y1) / steps)
-    win32api.SetCursorPos((x,y0))
-    time.sleep(0.03) #This pauses the script for 0.03 seconds to avoid missing the click
-    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y0,0,0)
-    for s in range(steps):
-        win32api.SetCursorPos((x, y0 - step * s))
-        time.sleep(speed)
-    win32api.SetCursorPos((x,y1))
-    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y1,0,0)
-    time.sleep(8) # wait for scroll to finish
+    # # pg.scroll(amount)
 
 
 def esc():
@@ -219,9 +223,9 @@ def loop():
 
 def main():
     # print("main")
-    start()
-    loop()
-    # setFormation(formations["main"])
+    # start()
+    # loop()
+    setFormation(formations["main"])
     # scrollDown()
 
 
