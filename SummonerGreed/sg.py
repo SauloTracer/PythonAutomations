@@ -17,7 +17,8 @@ areas = {
     "center": (700, 500, 500, 150),
     "dc": (800, 720, 300, 100),
     "formation": (796,325, 327, 386),
-    "monsterSelection": (732,208, 82, 751)
+    "monsterSelection": (732,208, 82, 751),
+    "exitArea": (917, 298, 81, 39)
 }
 
 points = {
@@ -95,6 +96,9 @@ def clearFormation():
 
 
 def scrollDown():
+    # try pg.moveTo(x, y, TEMPO)
+    # pg.dragTo(100, 100, 0.1, button='left')
+    # pg.scroll(amount)
     """Click and drag x0 y0 to x1 y1"""
     x = 1180
     y0, y1 = (930, 630)
@@ -116,7 +120,7 @@ def esc():
     print("esc")
     click((5, 100))
     keyboard.press_and_release('esc')
-    if(findImage(images["exit"], areas["center"])):
+    if(findImage(images["exit"], areas["exitArea"])):
         keyboard.press_and_release('esc')
 
 
@@ -215,9 +219,9 @@ def loop():
 
 def main():
     # print("main")
-    # start()
-    # loop()
-    setFormation(formations["main"])
+    start()
+    loop()
+    # setFormation(formations["main"])
     # scrollDown()
 
 
