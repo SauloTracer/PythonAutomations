@@ -106,6 +106,9 @@ def esc():
     print("esc")
     click((5, 100))
     keyboard.press_and_release('esc')
+
+
+def CheckForExit():
     if(findImage(images["exit"], areas["exitArea"], tries=5)):
         keyboard.press_and_release('esc')
 
@@ -199,6 +202,8 @@ def loop():
             click(point)
             time.sleep(2)
             start()
+
+        CheckForExit()
         
         time.sleep(updateTime)
 
