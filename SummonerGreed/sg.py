@@ -9,8 +9,8 @@ import win32api, win32con
 #    Select and position a specific team
 #    Identify how much is needed to buy a specific upgrade
 updateTime = 0.5
-# runType = "kn5"
-runType = "gold"
+runType = "kn5"
+# runType = "gold"
 
 areas = {
     "tr": (1090, 30, 106, 80),
