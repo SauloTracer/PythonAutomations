@@ -81,6 +81,12 @@ def resolveAd():
                     clickImage(ad[3], ad[2])
                 else:
                     click(ad[1])
+    
+                time.sleep(1)
+                if findImage("./img/resume.png", (1000, 530, 114, 60)):
+                    click((1050,560))
+                    continue
+
                 return
             if keyboard.is_pressed('q'):
                 break
