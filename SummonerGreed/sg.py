@@ -1,16 +1,22 @@
-from math import floor
-import pyautogui as pg
+''' Boiler plate for relative path import'''
+# Add's the project root folder to the path so we can import the Auto module normally
+import sys
+import os
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+#########################################################
+
+from Auto import *
 import time
-import keyboard
-import random
-import win32api, win32con
 
 #    Extract text from screen area
 #    Select and position a specific team
 #    Identify how much is needed to buy a specific upgrade
-updateTime = 0.5
-runType = "kn5"
-# runType = "gold"
+UPDATE_TIME = 0.5
+RUN_TYPE = "kn5"
+# RUN_TYPE = "gold"
+SAFE_POINT = (5,5)
 
 areas = {
     "tr": (1090, 30, 106, 80),
@@ -69,17 +75,20 @@ formations = {
         "neko", "kevin", "speedy", 
         "volt", "deathByte", "kingSlime", 
         "crispy", "felina", "hellHound"
+    ],
+    "new": [
+        "kevin", "speedy", "neko"
     ]
 }
 
 
 def setMonster(monster, position):
-    click(position)
+    click(position, SAFE_POINT)
     time.sleep(5)
     while not (point := findImage(mosnters[monster], areas["monsterSelection"])):
         scrollDown()
     if point:
-        click(point)
+        click(point, SAFE_POINT)
 
 
 def setFormation(formation):
@@ -91,72 +100,30 @@ def setFormation(formation):
 
 def clearFormation():
     while point := findImage(images["remove"], areas["formation"]):
-        click(point)
+        click(point, SAFE_POINT)
         time.sleep(1)
 
 
 def scrollDown():
-    win32api.SetCursorPos((1180,930))
-    pg.dragTo(1180, 500, 1, button='left')
-    time.sleep(7) # wait for scroll to finish
-    print("scrollDown finished")
-
-
-def esc():
-    print("esc")
-    click((5, 100))
-    keyboard.press_and_release('esc')
+    drag((1180,930), (1180, 500), 7)
+    # print("scrollDown finished")
 
 
 def CheckForExit():
     if(findImage(images["exit"], areas["exitArea"], tries=5)):
-        keyboard.press_and_release('esc')
+        esc((5,100))
 
 
 def buy(point):
     print("buy")
-    click(point)
-    time.sleep(2)
-    esc()    
+    click(point, SAFE_POINT)
+    time.sleep(1)
+    esc((5,100))
         
-
-def click(point): # point = (x, y)
-    print("click", point)
-    win32api.SetCursorPos(point)
-    time.sleep(0.03) #This pauses the script for 0.02 seconds to avoid missing the click
-    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,0,0)
-    time.sleep(0.03) #This pauses the script for 0.02 seconds to avoid missing the click
-    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,0,0)
-    win32api.SetCursorPos((5,5))
-
-
-def findImage(image, area, confidence=0.9, tries=1):
-    print('Searching for image: ' + image)
-    try:
-        for i in range(tries):
-            point = pg.locateCenterOnScreen(image, region=area, confidence=confidence)
-            if point:
-                return point
-            time.sleep(0.1)
-        return point
-    except:
-        return False
-
-
-def clickImage(image, area, confidence=0.9):
-    print('clickImage', image)
-    point = findImage(image, area, confidence)
-    if point:
-        click(point)
-        return True
-    else:
-        return False
-
 
 def restart():
     print("restart")
-
-    click(points["wave"])
+    click(points["wave"], SAFE_POINT)
     time.sleep(1)
     start()
 
@@ -164,24 +131,24 @@ def restart():
 def start():
     print("start")
 
-    global runType
+    global RUN_TYPE
     level = None
 
-    if(runType == "gold"):
+    if(RUN_TYPE == "gold"):
         level = points["jrh"]
-    elif(runType == "kn5"):
+    elif(RUN_TYPE == "kn5"):
         level = points["kn"]
 
-    click(level)
+    click(level, SAFE_POINT)
     time.sleep(2.5)
-    click(points["go"])
+    click(points["go"], SAFE_POINT)
 
 
 def loop():
     print("loop")
 
-    global runType
-    global updateTime
+    global RUN_TYPE
+    global UPDATE_TIME
 
     while True:
         if keyboard.is_pressed("q"):
@@ -189,23 +156,24 @@ def loop():
 
         if(findImage(images["ad"], areas["center"])):
             time.sleep(1)
-            esc()
+            esc((5,100))
 
         if(point := findImage(images["coin"], areas["center"])):
             time.sleep(1)
             buy(point)
-            if(runType == "kn5"):
+            if(RUN_TYPE == "kn5"):
+                time.sleep(4)
                 restart()
         
         if(point := findImage(images["continue"], areas["dc"])):
             time.sleep(1)
-            click(point)
+            click(point, SAFE_POINT)
             time.sleep(2)
             start()
 
         CheckForExit()
         
-        time.sleep(updateTime)
+        time.sleep(UPDATE_TIME)
 
 
 def main():

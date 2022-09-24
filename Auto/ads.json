@@ -1,0 +1,83 @@
+[
+    {
+        "img": "../Auto/img/granted.png",
+        "point": [1171,62],
+        "area": [1010, 44, 185, 50]
+    },
+    {
+        "img": "../Auto/img/leftgranted.png",
+        "point": [745,62],
+        "area": [765, 46, 185, 50]
+    },
+    {
+        "img": "../Auto/img/granted2.png",
+        "point": [1171,62],
+        "area": [1010, 44, 185, 50]
+    },
+    {
+        "img": "../Auto/img/close2.png",
+        "point": [1171,62],
+        "area": [1150, 42, 42, 50]
+    },
+    {
+        "img": "../Auto/img/close3.png",
+        "point": [1172,61],
+        "area": [1150, 42, 42, 50]
+    },
+    {
+        "img": "../Auto/img/close4.png",
+        "point": [1154,83],
+        "area": [1125, 53, 55, 5]
+    },
+    {
+        "img": "../Auto/img/close5.png",
+        "point": [1172,61],
+        "area": [1150, 42, 42, 50]
+    },
+    {
+        "img": "../Auto/img/close6.png",
+        "point": [1172,65],
+        "area": [1152, 45, 40, 40]
+    },
+    {
+        "img": "../Auto/img/close7.png",
+        "point": [1172,65],
+        "area": [1154, 42, 40, 42]
+    },
+    {
+        "img": "../Auto/img/close8.png",
+        "point": [1172,65],
+        "area": [1150, 40, 45, 45]
+    },
+    {
+        "img": "../Auto/img/close9.png",
+        "point": [748,71],
+        "area": [728, 51, 40, 40]
+    },
+    {
+        "img": "../Auto/img/close10.png",
+        "point": [1172,65],
+        "area": [1154, 42, 40, 42]
+    },
+    {
+        "img": "../Auto/img/close11.png",
+        "point": [1172,65],
+        "area": [1149, 42, 53, 42]
+    },
+    {
+        "img": "../Auto/img/close12.png",
+        "point": [1162,110],
+        "area": [1140, 89, 44, 42]
+    },
+    {
+        "img": "../Auto/img/close13.png",
+        "point": [1154,73],
+        "area": [1134, 54, 45, 50]
+    },
+    {
+        "img": "../Auto/img/gplay.png", 
+        "point": null,
+        "area": [730, 107, 458, 330], 
+        "imgClose": "../Auto/img/closeGplay.png"
+    }
+]
