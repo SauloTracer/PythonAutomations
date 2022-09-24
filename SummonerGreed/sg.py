@@ -10,13 +10,13 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 from Auto import *
 import time
 
-#    Extract text from screen area
-#    Select and position a specific team
-#    Identify how much is needed to buy a specific upgrade
+# Identify best filter to select a monster
+# Extract text from screen area (Tesseract)
+# Identify how much is needed to buy a specific upgrade
 UPDATE_TIME = 0.5
+WATCH_ADS = False
 RUN_TYPE = "kn5"
 # RUN_TYPE = "gold"
-SAFE_POINT = (5,5)
 
 areas = {
     "tr": (1090, 30, 106, 80),
@@ -83,12 +83,12 @@ formations = {
 
 
 def setMonster(monster, position):
-    click(position, SAFE_POINT)
+    click(position)
     time.sleep(5)
     while not (point := findImage(mosnters[monster], areas["monsterSelection"])):
         scrollDown()
     if point:
-        click(point, SAFE_POINT)
+        click(point)
 
 
 def setFormation(formation):
@@ -100,7 +100,7 @@ def setFormation(formation):
 
 def clearFormation():
     while point := findImage(images["remove"], areas["formation"]):
-        click(point, SAFE_POINT)
+        click(point)
         time.sleep(1)
 
 
@@ -116,14 +116,14 @@ def CheckForExit():
 
 def buy(point):
     print("buy")
-    click(point, SAFE_POINT)
+    click(point)
     time.sleep(1)
     esc((5,100))
         
 
 def restart():
     print("restart")
-    click(points["wave"], SAFE_POINT)
+    click(points["wave"])
     time.sleep(1)
     start()
 
@@ -139,9 +139,9 @@ def start():
     elif(RUN_TYPE == "kn5"):
         level = points["kn"]
 
-    click(level, SAFE_POINT)
+    click(level)
     time.sleep(2.5)
-    click(points["go"], SAFE_POINT)
+    click(points["go"])
 
 
 def loop():
@@ -154,8 +154,13 @@ def loop():
         if keyboard.is_pressed("q"):
             break
 
-        if(findImage(images["ad"], areas["center"])):
+        if(point := findImage(images["ad"], areas["center"])):
             time.sleep(1)
+            if WATCH_ADS:
+                click(point)
+                time.sleep(5)
+                CloseAd()
+                time.sleep(2)
             esc((5,100))
 
         if(point := findImage(images["coin"], areas["center"])):
@@ -167,7 +172,7 @@ def loop():
         
         if(point := findImage(images["continue"], areas["dc"])):
             time.sleep(1)
-            click(point, SAFE_POINT)
+            click(point)
             time.sleep(2)
             start()
 

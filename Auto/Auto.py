@@ -7,7 +7,7 @@ from .Point import *
 from .Area import *
 
 
-def click(point : Point, resetMousePos : Point = None, wait:float=0.03):
+def click(point : Point, resetMousePos : None, wait:float=0.03):
     # print("click", point)
     win32api.SetCursorPos(point)
     time.sleep(wait) #This pauses the script for wait seconds to avoid missing the click
@@ -75,8 +75,7 @@ def CloseAd(safePoint : Point = None):
                     click(ad["point"], safePoint)
     
                 time.sleep(1)
-                if findImage("../Auto/img/resume.png", (1000, 530, 114, 60)):
-                    click((1050,560), safePoint)
+                if ad["continue"]:
                     continue
 
                 return
