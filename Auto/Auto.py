@@ -1,4 +1,5 @@
 import pyautogui as pg
+from math import floor
 import time
 import keyboard
 import win32api, win32con
@@ -82,3 +83,14 @@ def CloseAd(safePoint : Point = None):
             if keyboard.is_pressed('q'):
                 break
             time.sleep(0.5)
+
+
+def AreaFromPoint(point : Point, width : int=None, height : int=None):
+    if width is None:
+        width = 1
+    if height is None:
+        height = width
+    x, y = point
+    x -= floor(width / 2)
+    y -= floor(height / 2)
+    return (x, y, width, height)

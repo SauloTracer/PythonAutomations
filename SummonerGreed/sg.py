@@ -2,6 +2,7 @@
 # Add's the project root folder to the path so we can import the Auto module normally
 import sys
 import os
+from tkinter import SCROLL
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
@@ -15,21 +16,30 @@ import time
 # Identify how much is needed to buy a specific upgrade
 UPDATE_TIME = 0.5
 WATCH_ADS = False
-RUN_TYPE = "kn5"
+
+# RUN_TYPE = "kn5"
 # RUN_TYPE = "gold"
+RUN_TYPE = "blueTokens"
+
+REMOVE_OFFSET_Y = 80
+SCROLL_LIMIT = 50
 
 areas = {
     "tr": (1090, 30, 106, 80),
     "center": (700, 500, 500, 150),
     "dc": (800, 720, 300, 100),
-    "formation": (796,325, 327, 386),
-    "monsterSelection": (732,208, 82, 751),
-    "exitArea": (917, 298, 81, 39)
+    "formation": (796, 325, 327, 386),
+    "monsterSelection": (735, 195, 80, 775),
+    "exitArea": (917, 298, 81, 39),
+    "sorts": (715, 145, 370, 55),
+    "monsterName": (840, 770, 250, 40),
+    "screenTitle": (715, 95, 300, 60),
 }
 
 points = {
     "kn": (812, 363),       # king normal
     "jrh": (962, 724),      # joint revenge hard
+    "esn": (839,922),       # evil summoner normal
     "go": (959, 978),       # Confirm formation
     "wave": (1142, 68),     # Wave
     "pos1": (846, 260),     # Position 1
@@ -38,9 +48,13 @@ points = {
     "pos4": (846, 435),     # Position 4
     "pos5": (965, 435),     # Position 5
     "pos6": (1077, 435),    # Position 6
-    "pos7": (849, 610),     # Position 7
+    "pos7": (846, 610),     # Position 7
     "pos8": (965, 610),     # Position 8
     "pos9": (1077, 610),    # Position 9
+    "level": (774,172),     # Level sort button
+    "rarity": (894, 172),   # Rarity sort button
+    "speed": (1014, 172),   # Speed sort button
+    "closeMonsterInfo": (1170, 1000), # Close monster info
 }
 
 images = {
@@ -51,23 +65,37 @@ images = {
     "ok": "img/ok.png",
     "classic": "img/classic.png",
     "remove": "img/remove.png",
+    "emptyPos": "img/emptyPos.png",
+    "select": "img/select.png",
+    "challenge": "img/challenge.png",
+    "selectMap": "img/selectMap.png",
+    "recharge": "img/recharge.png",
 }
 
-mosnters = {
-    "speedy": "img/speedy.png",
-    "kevin": "img/kevin.png",
-    "neko": "img/neko.png",
-    "volt": "img/volt.png",
-    "deathByte": "img/deathByte.png",
-    "kingSlime": "img/kingSlime.png",
-    "kingsLover": "img/kingsLover.png",
-    "crispy": "img/crispy.png",
-    "felina": "img/felina.png",
-    "hellHound": "img/hellHound.png",
-    "ra": "img/ra.png",
-    "icy": "img/icy.png",
-    "iceDragon": "img/iceDragon.png",
-    "iceAngel": "img/iceAngel.png",
+sorts = {
+    "lowLevel": ("img/lowLevel.png", points["level"]),
+    "highLevel": ("img/highLevel.png", points["level"]),
+    "fast": ("img/fast.png", points["speed"]),
+    "slow": ("img/slow.png", points["speed"]),
+    "rare": ("img/rare.png", points["rarity"]),
+    "common": ("img/common.png", points["rarity"]),
+}
+
+monsters = {
+    "speedy": ("img/speedy.png", "img/speedyName.png", sorts["slow"]),
+    "kevin": ("img/kevin.png", "img/kevinName.png", sorts["highLevel"]),
+    "neko": ("img/neko.png", "img/nekoName.png", sorts["slow"]),
+    "volt": ("img/volt.png", "img/voltName.png", sorts["fast"]),
+    "deathByte": ("img/deathByte.png", "img/deathByteName.png", sorts["highLevel"]),
+    "kingSlime": ("img/kingSlime.png", "img/kingSlimeName.png", sorts["highLevel"]),
+    "kingsLover": ("img/kingsLover.png", "img/kingsLoverName.png", sorts["lowLevel"]),
+    "crispy": ("img/crispy.png", "img/crispyName.png", sorts["rare"]),
+    "felina": ("img/felina.png", "img/felinaName.png", sorts["highLevel"]),
+    "hellHound": ("img/hellHound.png", "img/hellHoundName.png", sorts["rare"]),
+    "ra": ("img/ra.png", "img/raName.png", sorts["rare"]),
+    "icy": ("img/icy.png", "img/icyName.png", sorts["highLevel"]),
+    "iceDragon": ("img/iceDragon.png", "img/iceDragonName.png", sorts["highLevel"]),
+    "iceAngel": ("img/iceAngel.png", "img/iceAngelName.png", sorts["rare"]),
 }
 
 formations = {
@@ -77,25 +105,75 @@ formations = {
         "crispy", "felina", "hellHound"
     ],
     "new": [
-        "kevin", "speedy", "neko"
+        "kevin", "speedy", "volt",
+        "crispy", "ra", "kingSlime",
+        "hellHound", "felina", "neko"
     ]
 }
 
 
+def sortBy(sort):
+    if findImage(sort[0], areas["sorts"]):
+        return
+    while not findImage(sort[0], areas["sorts"], tries=3):
+        click(sort[1])
+        time.sleep(3)
+
+
 def setMonster(monster, position):
-    click(position)
-    time.sleep(5)
-    while not (point := findImage(mosnters[monster], areas["monsterSelection"])):
+    if not isPositionEmpty(position):
+        click(position)
+        time.sleep(3)
+        res = findImage(monster[1], areas["monsterName"], tries=3)
+        if res:
+            print("Monster already in position")
+            return
+        else:
+            print("Clearing position")
+            clearPosition(position)
+    
+    print("Entering selection screen")
+    while not findImage(images["select"], areas["screenTitle"]):
+        click(position)
+        time.sleep(5)
+
+    print("Sorting by", monster[2][0])
+    sortBy(monster[2])
+
+    time.sleep(3)
+
+    print("Searching for monster")
+    while not (point := findImage(monster[0], areas["monsterSelection"], tries=3)):
         scrollDown()
     if point:
+        print("Found monster")
         click(point)
 
 
 def setFormation(formation):
-    clearFormation()
+    print("Setting formation: ", formation)
     for i in range(len(formation)):
-        setMonster(formation[i], points["pos"+str(i + 1)])
-        time.sleep(5)
+        print(formation[i])
+        setMonster(monsters[formation[i]], points["pos"+str(i + 1)])
+    time.sleep(5)
+    click(points["closeMonsterInfo"])
+
+
+def clearPosition(position):
+    x, y = position
+    y += REMOVE_OFFSET_Y
+    while not isPositionEmpty(position):
+        click((x, y))
+        time.sleep(.5)
+
+
+def isPositionEmpty(position):
+    res = findImage(images["emptyPos"], AreaFromPoint(position, 40, 60))
+    if res:
+        print("Position is empty")
+    else:
+        print("Position is occupied")
+    return res
 
 
 def clearFormation():
@@ -105,11 +183,12 @@ def clearFormation():
 
 
 def scrollDown():
-    drag((1180,930), (1180, 500), 7)
+    print("Scrolling down")
+    drag((1180,930), (1180, 500), 10)
     # print("scrollDown finished")
 
 
-def CheckForExit():
+def checkForExit():
     if(findImage(images["exit"], areas["exitArea"], tries=5)):
         esc((5,100))
 
@@ -138,9 +217,21 @@ def start():
         level = points["jrh"]
     elif(RUN_TYPE == "kn5"):
         level = points["kn"]
+    elif(RUN_TYPE == "blueTokens"):
+        clickImage(images["challenge"], None)
+        time.sleep(3)
+        level = points["esn"]
 
     click(level)
-    time.sleep(2.5)
+    time.sleep(3)
+    if (RUN_TYPE == "blueTokens"):
+        if point := findImage(images["recharge"], None):
+            click(point)
+            time.sleep(2.5)
+            click(level)
+            time.sleep(2.5)
+        setFormation(formations["new"])
+        time.sleep(3)
     click(points["go"])
 
 
@@ -170,13 +261,18 @@ def loop():
                 time.sleep(4)
                 restart()
         
-        if(point := findImage(images["continue"], areas["dc"])):
-            time.sleep(1)
-            click(point)
-            time.sleep(2)
-            start()
+        if (RUN_TYPE == "blueTokens"):
+            if(point := findImage(images["selectMap"], None)):
+                click(point)
+                time.sleep(4)
+                restart()
+        else:
+            if(point := findImage(images["continue"], areas["dc"])):
+                click(point)
+                time.sleep(3)
+                start()
 
-        CheckForExit()
+        checkForExit()
         
         time.sleep(UPDATE_TIME)
 
