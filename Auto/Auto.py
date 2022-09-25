@@ -32,6 +32,11 @@ def findImage(image : str, area : Area, confidence:float=0.9, tries:int=1, wait:
         return False
 
 
+def waitForImage(image : str, area : Area, confidence:float=0.9, wait:float=1):
+    while not findImage(image, area, confidence):
+        time.sleep(wait)
+
+
 def clickImage(image : str, area : Area, confidence:float=0.9):
     # print('clickImage', image)
     point = findImage(image, area, confidence)

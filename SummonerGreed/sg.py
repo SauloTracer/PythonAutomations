@@ -11,9 +11,10 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 from Auto import *
 import time
 
-# Identify best filter to select a monster
 # Extract text from screen area (Tesseract)
 # Identify how much is needed to buy a specific upgrade
+# If not enough gems or gold, run jrh to get more and retry
+
 UPDATE_TIME = 0.5
 WATCH_ADS = False
 
