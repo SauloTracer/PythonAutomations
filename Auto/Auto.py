@@ -32,9 +32,12 @@ def findImage(image : str, area : Area, confidence:float=0.9, tries:int=1, wait:
         return False
 
 
-def waitForImage(image : str, area : Area, confidence:float=0.9, wait:float=1):
-    while not findImage(image, area, confidence):
+def waitForImage(image : str, area : Area, limit:int=60, confidence:float=0.9, wait:float=1):
+    while not (point := findImage(image, area, confidence)) or limit <= 0:
         time.sleep(wait)
+        limit -= 1
+    else:
+        return point
 
 
 def clickImage(image : str, area : Area, confidence:float=0.9):
