@@ -2,7 +2,6 @@
 # Add's the project root folder to the path so we can import the Auto module normally
 import sys
 import os
-from tkinter import SCROLL
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
@@ -16,14 +15,16 @@ import time
 # If not enough gems or gold, run jrh to get more and retry
 
 UPDATE_TIME = 0.5
+REMOVE_OFFSET_Y = 80
+SCROLL_LIMIT = 50
+
+# WATCH_ADS = True
 WATCH_ADS = False
 
 # RUN_TYPE = "kn5"
 # RUN_TYPE = "gold"
 RUN_TYPE = "blueTokens"
 
-REMOVE_OFFSET_Y = 80
-SCROLL_LIMIT = 50
 
 areas = {
     "tr": (1090, 30, 106, 80),
@@ -71,6 +72,8 @@ images = {
     "challenge": "img/challenge.png",
     "selectMap": "img/selectMap.png",
     "recharge": "img/recharge.png",
+    "normal": "img/normal.png",
+    "confirm": "img/confirm.png",
 }
 
 sorts = {
@@ -169,7 +172,7 @@ def clearPosition(position):
 
 
 def isPositionEmpty(position):
-    res = findImage(images["emptyPos"], AreaFromPoint(position, 40, 60))
+    res = findImage(images["emptyPos"], areaFromPoint(position, 40, 60))
     if res:
         print("Position is empty")
     else:
@@ -197,15 +200,30 @@ def checkForExit():
 def buy(point):
     print("buy")
     click(point)
-    time.sleep(1)
-    esc((5,100))
+    if waitForImage(images["ok"], None):
+        esc((5,100))
         
 
-def restart():
-    print("restart")
+def resetLevel():
+    print("reset level")
     click(points["wave"])
-    time.sleep(1)
-    start()
+    if(waitForImage(images["classic"], None)):
+        start()
+
+
+def restart():
+    targetImage = images["continue"]
+    targetImageArea = areas["dc"]
+    checkImage = images["classic"]
+
+    if (RUN_TYPE == "blueTokens"):
+        targetImage = images["selectMap"]
+        targetImageArea = None
+
+    if(point := findImage(targetImage, targetImageArea)):
+        click(point)
+        waitForImage(checkImage, None)
+        start()
 
 
 def start():
@@ -224,16 +242,45 @@ def start():
         level = points["esn"]
 
     click(level)
-    time.sleep(3)
+    
     if (RUN_TYPE == "blueTokens"):
+        time.sleep(3)
         if point := findImage(images["recharge"], None):
             click(point)
-            time.sleep(2.5)
+            waitForImage(images["normal"], None)
             click(level)
-            time.sleep(2.5)
+            waitForImage(images["confirm"], None)
         setFormation(formations["new"])
         time.sleep(3)
+
+    waitForImage(images["confirm"], None)
     click(points["go"])
+
+
+def ad():
+    if(point := findImage(images["ad"], areas["center"])):
+        print("Ad")
+        time.sleep(1)
+        if WATCH_ADS:
+            click(point)
+            print("Watching ad")
+            time.sleep(5)
+            print("Closing ad")
+            closeAd(images["ok"])
+            if waitForImage(images["ok"], None):
+                esc((5,100))
+        else:
+            print("Escaping ad")
+            esc((5,100))
+
+
+def vendor():
+    if(point := findImage(images["coin"], areas["center"])):
+        buy(point)
+        if(RUN_TYPE == "kn5"):
+            while findImage(images["ok"], None):
+                time.sleep(1)
+            resetLevel()
 
 
 def loop():
@@ -246,35 +293,11 @@ def loop():
         if keyboard.is_pressed("q"):
             break
 
-        if(point := findImage(images["ad"], areas["center"])):
-            time.sleep(1)
-            if WATCH_ADS:
-                click(point)
-                time.sleep(5)
-                CloseAd()
-                time.sleep(2)
-            esc((5,100))
-
-        if(point := findImage(images["coin"], areas["center"])):
-            time.sleep(1)
-            buy(point)
-            if(RUN_TYPE == "kn5"):
-                time.sleep(4)
-                restart()
-        
-        if (RUN_TYPE == "blueTokens"):
-            if(point := findImage(images["selectMap"], None)):
-                click(point)
-                time.sleep(4)
-                restart()
-        else:
-            if(point := findImage(images["continue"], areas["dc"])):
-                click(point)
-                time.sleep(3)
-                start()
-
+        ad()
+        vendor()
         checkForExit()
-        
+        restart()
+
         time.sleep(UPDATE_TIME)
 
 

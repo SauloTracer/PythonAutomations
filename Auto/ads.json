@@ -118,7 +118,7 @@
         "img": "../Auto/img/close15.png", 
         "point": [1178,97],
         "area": [1155, 75, 40, 40] ,
-        "continue": false
+        "continue": true
     },
     {
         "img": "../Auto/img/close16.png", 
@@ -134,6 +134,12 @@
     },
     {
         "img": "../Auto/img/close1.png", 
+        "point": [745,62],
+        "area": [712, 35, 80, 65],
+        "continue": false
+    },
+    {
+        "img": "../Auto/img/close18.png", 
         "point": [745,62],
         "area": [712, 35, 80, 65],
         "continue": false
@@ -161,7 +167,18 @@
         "point": [1171,62],
         "area": [1120, 35, 80, 65],
         "continue": true
+    },
+    {
+        "img": "../Auto/img/advance4.png", 
+        "point": [1171,62],
+        "area": [1120, 35, 80, 65],
+        "continue": true
+    },
+    {
+        "img": "../Auto/img/close19.png", 
+        "point": [1171,62],
+        "area": [1120, 35, 80, 65],
+        "continue": false
     }
-
-    
+   
 ]

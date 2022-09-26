@@ -64,36 +64,62 @@ def esc(targetWindowPoint : Point=None):
     keyboard.press_and_release('esc')
 
 
-def LoadAds():
+def loadAds():
     ads = {}
     with open("../Auto/ads.json", "r") as f:
         ads = json.load(f)
     return ads
 
 
-def CloseAd(safePoint : Point = None):
-    ads = LoadAds()
+def findAndClickCloseButton(ad):
+    res = findImage(ad["img"], ad["area"], 0.8)
+    if res:
+        if ad["point"] is None:
+            clickImage(ad["imgClose"], ad["area"])
+        else:
+            click(ad["point"])
+    return res
+
+
+def closeAd(outImage : str=None, area : Area=None, confidence:float=0.9):
+    all = loadAds()
+    ads = filter(lambda ad: not ad["continue"], all)
+    continuousAds = filter(lambda ad: ad["continue"], all)
+    iteration = 0
     while True:
+        iteration += 1
+        print("Iteration: ", iteration)
+        foundClose = False
+        foundContinue = False
+
         for ad in ads:
-            print(ad)
-            res = findImage(ad["img"], ad["area"], 0.8)
-            if res:
-                if ad["point"] is None:
-                    clickImage(ad["imgClose"], ad["area"])
-                else:
-                    click(ad["point"], safePoint)
-    
-                time.sleep(1)
-                if ad["continue"]:
-                    continue
-
-                return
             if keyboard.is_pressed('q'):
-                break
-            time.sleep(0.5)
+                break # break out of for loop and continues while loop flow
+            foundClose = findAndClickCloseButton(ad)
+            if foundClose:
+                break # break out of for loop and continues while loop flow
+
+        time.sleep(6)
+
+        for cad in continuousAds:
+            if keyboard.is_pressed('q'):
+                break # break out of for loop and continues while loop flow
+            foundContinue = findAndClickCloseButton(cad)
+            if foundContinue:
+                break # break out of for loop and continues while loop flow
+        
+        if foundClose and not foundContinue:
+            return
+        
+        if findImage(outImage, area, confidence):
+            return
+
+        if keyboard.is_pressed('q'):
+            break
 
 
-def AreaFromPoint(point : Point, width : int=None, height : int=None):
+
+def areaFromPoint(point : Point, width : int=None, height : int=None):
     if width is None:
         width = 1
     if height is None:
